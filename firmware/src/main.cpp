@@ -10,9 +10,9 @@
 // the sensors. The vibration module calls onBinEmptied() when a sustained
 // shake pattern is confirmed.
 
+#include <Arduino.h>
 #include "config.h"
 #include "modules.h"
-#include <Arduino.h>
 #include <WiFi.h>
 #include <Preferences.h>
 
@@ -21,17 +21,33 @@ BinState g_state;
 
 static uint32_t s_lastDiagMs = 0;
 
+// Shared LED-feedback state (file-scope, not static — calibration_button.cpp
+// uses these via extern declarations so both modules can schedule blinks
+// without stomping each other).
+uint8_t  s_ledBlinksLeft = 0;     // pending LED blink transitions (0 = idle)
+uint32_t s_ledBlinkNextMs = 0;    // millis at which to toggle next
+bool     s_ledBlinkState = false; // current LED state during a sequence
+
 // Called by vibration.cpp when an "emptied" pattern is confirmed.
 void onBinEmptied(uint32_t epochSeconds) {
     g_state.last_emptied = epochSeconds;
     historyAppend("emptied", epochSeconds);
     Serial.printf("[main] EMPTIED event logged @ %lu\n", (unsigned long)epochSeconds);
+    // Schedule a 4-blink LED feedback sequence (non-blocking).
+    s_ledBlinksLeft = 8; // 4 on+off pairs
+    s_ledBlinkNextMs = millis();
+    s_ledBlinkState = false;
+}
 
-    // Blink the LED a few times as user feedback.
-    for (uint8_t i = 0; i < 4; i++) {
-        digitalWrite(PIN_LED, HIGH); delay(80);
-        digitalWrite(PIN_LED, LOW);  delay(80);
-    }
+// Non-blocking LED blinker — called from loop().
+static void tickLedFeedback() {
+    if (s_ledBlinksLeft == 0) return;
+    uint32_t now = millis();
+    if (now < s_ledBlinkNextMs) return;
+    s_ledBlinkState = !s_ledBlinkState;
+    digitalWrite(PIN_LED, s_ledBlinkState ? HIGH : LOW);
+    s_ledBlinkNextMs = now + 80;
+    s_ledBlinksLeft--;
 }
 
 void setup() {
@@ -46,15 +62,6 @@ void setup() {
     // the suffix) and before the web server reads g_state.
     calibrationBegin();          // loads bin_name, host_suffix, empty/full cm
     historyBegin();              // mount LittleFS
-
-    // g_state.host_suffix is loaded by calibrationBegin via the same NVS
-    // namespace; mirror it for the wifi module's convenience.
-    {
-        Preferences prefs;
-        prefs.begin(NVS_NAMESPACE, true);
-        g_state.host_suffix = prefs.getString("host_suffix", "");
-        prefs.end();
-    }
 
     Serial.printf("[boot] chip_id=%s suffix=%s\n",
                   g_state.chip_id.c_str(),
@@ -77,6 +84,8 @@ void loop() {
     ultrasonicTick();
     // Calibration button handling.
     calibrationButtonTick();
+    // Non-blocking LED feedback (emptied events, etc.).
+    tickLedFeedback();
 
     // Periodic diagnostics to serial (every 10 s).
     uint32_t now = millis();

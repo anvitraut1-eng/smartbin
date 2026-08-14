@@ -2,6 +2,7 @@
 // modules.h — forward declarations for all firmware modules, so main.cpp and
 // web_server.cpp can call into them without each .cpp needing its own header.
 
+#include <Arduino.h>
 #include "state.h"
 
 // ultrasonic.cpp

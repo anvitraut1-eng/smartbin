@@ -5,6 +5,7 @@
 // ArduinoJson. Handlers are async callbacks — they never block loop(), so the
 // 50 Hz vibration sampling keeps running while a request is served.
 
+#include <Arduino.h>
 #include "config.h"
 #include "modules.h"
 #include <ESPAsyncWebServer.h>

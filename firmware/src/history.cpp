@@ -5,10 +5,10 @@
 // recent HISTORY_MAX_EVENTS entries. The HTTP /api/history endpoint returns
 // the last N events as a JSON array built here.
 
+#include <Arduino.h>
 #include "config.h"
 #include "modules.h"
 #include <LittleFS.h>
-#include <Arduino.h>
 #include <vector>
 
 static const size_t LINE_BUF = 80;

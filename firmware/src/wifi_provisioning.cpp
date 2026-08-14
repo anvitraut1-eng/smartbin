@@ -8,6 +8,7 @@
 // home network. Hold the BOOT button (GPIO0) for >3s during boot to wipe
 // NVS and re-enter the portal.
 
+#include <Arduino.h>
 #include "config.h"
 #include "modules.h"
 #include <WiFiManager.h>       // tzapu/WiFiManager
