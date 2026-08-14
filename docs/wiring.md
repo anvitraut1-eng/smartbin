@@ -26,6 +26,24 @@ you enter during WiFi provisioning differs (e.g. `kitchen`, `office`).
 | SW-420 DO          | GPIO 19    | Input                                  |
 | Status LED         | GPIO 2     | On-board LED                           |
 | BOOT button        | GPIO 0     | Hold >3 s at boot to wipe NVS          |
+| Calibration button | GPIO 4     | Momentary push button to GND, internal pull-up |
+
+## Calibration button
+
+GPIO 4 has an internal pull-up resistor enabled in firmware. Connect a
+momentary push button between **GPIO 4** and **GND**. Pressing the button
+cycles through calibration steps:
+
+1. **Press once** → Enter calibration mode (LED blinks fast at 5 Hz)
+2. **Press again** → Measures distance and stores as `empty_cm` (LED solid for 2s, then 2 quick blinks)
+3. **Press again** → Measures distance and stores as `full_cm` (LED solid for 2s, then 3 quick blinks)
+4. **Press again** → Exit calibration mode (LED back to normal)
+
+If a measurement fails (sensor out of range), the LED rapidly blinks 5 times
+and the state stays the same so you can retry.
+
+While in calibration mode, make sure the bin is empty before pressing the
+"set empty" step, and full before pressing the "set full" step.
 
 ## Voltage divider (HC-SR04 Echo)
 

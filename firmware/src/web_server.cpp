@@ -21,7 +21,7 @@ static void cors(AsyncWebServerResponse* resp) {
 }
 
 static void sendJson(AsyncWebServerRequest* req, const String& body) {
-    AsyncWebServerResponse* resp = req->newResponse(200, "application/json", body);
+    AsyncWebServerResponse* resp = req->beginResponse(200, "application/json", body);
     cors(resp);
     req->send(resp);
 }

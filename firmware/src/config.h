@@ -3,15 +3,17 @@
 // Change pin assignments here if you wire your ESP32 differently.
 
 #include <cstdint>
+#include <cstddef>
 
 // ---------------------------------------------------------------------------
 // GPIO pins
 // ---------------------------------------------------------------------------
-static const uint8_t PIN_TRIG = 5;    // HC-SR04 Trig  (ESP32 -> sensor, output)
-static const uint8_t PIN_ECHO = 18;   // HC-SR04 Echo  (sensor -> ESP32, input, 5V -> divider)
-static const uint8_t PIN_VIB  = 19;   // SW-420 DO     (sensor -> ESP32, input, 3.3V)
-static const uint8_t PIN_LED  = 2;    // On-board LED / status (output)
-static const uint8_t PIN_BTN  = 0;    // Boot button — hold >3s at boot to wipe NVS
+static const uint8_t PIN_TRIG     = 5;    // HC-SR04 Trig  (ESP32 -> sensor, output)
+static const uint8_t PIN_ECHO     = 18;   // HC-SR04 Echo  (sensor -> ESP32, input, 5V -> divider)
+static const uint8_t PIN_VIB      = 19;   // SW-420 DO     (sensor -> ESP32, input, 3.3V)
+static const uint8_t PIN_LED      = 2;    // On-board LED / status (output)
+static const uint8_t PIN_BTN      = 0;    // Boot button — hold >3s at boot to wipe NVS
+static const uint8_t PIN_CAL_BTN  = 4;    // Calibration button (input, pulled up)
 
 // ---------------------------------------------------------------------------
 // Ultrasonic (HC-SR04)

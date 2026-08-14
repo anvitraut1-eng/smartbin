@@ -24,6 +24,10 @@ float calibrationMeasureAndStoreFull();  // 10-shot median -> full_cm  -> NVS
 void  calibrationSet(const String& binName, float emptyCm, float fullCm);
 bool  calibrationIsReady();
 
+// calibration_button.cpp
+void calibrationButtonBegin();   // setup button GPIO
+void calibrationButtonTick();    // call from loop() to handle button presses
+
 // history.cpp
 void historyBegin();             // mount LittleFS
 void historyAppend(const char* type, uint32_t epochSeconds);

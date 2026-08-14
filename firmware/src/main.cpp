@@ -63,6 +63,7 @@ void setup() {
     wifiProvisioningBegin();     // captive portal + mDNS + SNTP
     ultrasonicBegin();
     vibrationBegin();
+    calibrationButtonBegin();    // physical calibration button
     webServerBegin();
 
     digitalWrite(PIN_LED, HIGH); // solid on = ready
@@ -74,6 +75,8 @@ void loop() {
     vibrationTick();
     // Ultrasonic self-throttles to 2 Hz.
     ultrasonicTick();
+    // Calibration button handling.
+    calibrationButtonTick();
 
     // Periodic diagnostics to serial (every 10 s).
     uint32_t now = millis();

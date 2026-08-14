@@ -6,6 +6,7 @@
 // the last N events as a JSON array built here.
 
 #include "config.h"
+#include "modules.h"
 #include <LittleFS.h>
 #include <Arduino.h>
 #include <vector>
