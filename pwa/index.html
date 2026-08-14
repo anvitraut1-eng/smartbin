@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e0f12" />
+  <title>Smart Bin</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">
+      <span class="logo">🗑️</span>
+      <h1>Smart Bin</h1>
+    </div>
+    <div class="actions">
+      <span id="globalStatus" class="dot offline" title="Network status"></span>
+      <button id="addBinBtn" class="btn primary">+ Add bin</button>
+    </div>
+  </header>
+
+  <main id="binList" class="bin-list">
+    <!-- Bin cards rendered here by app.js -->
+  </main>
+
+  <div id="emptyState" class="empty-state">
+    <p>No bins yet.</p>
+    <p class="muted">Tap <strong>+ Add bin</strong> and enter your ESP32's address (e.g. <code>smartbin-kitchen.local</code>).</p>
+  </div>
+
+  <!-- Install banner -->
+  <div id="installBanner" class="install-banner hidden">
+    <span>Install Smart Bin on your home screen</span>
+    <button id="installYes" class="btn primary small">Install</button>
+    <button id="installNo" class="btn ghost small">Not now</button>
+  </div>
+
+  <!-- Add-bin modal -->
+  <div id="addBinModal" class="modal hidden">
+    <div class="modal-card">
+      <h2>Add bin</h2>
+      <label>Friendly name
+        <input id="addName" type="text" placeholder="Kitchen" />
+      </label>
+      <label>Host (mDNS or IP)
+        <input id="addHost" type="text" placeholder="smartbin-kitchen.local" />
+      </label>
+      <div class="row">
+        <button id="testBtn" class="btn ghost">Test connection</button>
+        <span id="testResult" class="test-result"></span>
+      </div>
+      <div class="row right">
+        <button class="btn ghost" data-close="addBinModal">Cancel</button>
+        <button id="saveBinBtn" class="btn primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calibration modal -->
+  <div id="calibModal" class="modal hidden">
+    <div class="modal-card">
+      <h2>Calibrate <span id="calibName"></span></h2>
+      <p class="muted">Set the empty and full distances. Stand the bin empty, tap "I'm empty now"; fill it, tap "I'm full now".</p>
+      <div class="big-buttons">
+        <button id="calEmpty" class="btn primary block">I'm empty now</button>
+        <button id="calFull"  class="btn primary block">I'm full now</button>
+      </div>
+      <div id="calCurrent" class="cal-current muted"></div>
+      <label>Or enter distances manually (cm)
+        <div class="row">
+          <input id="manualEmpty" type="number" step="0.1" placeholder="empty cm" />
+          <input id="manualFull"  type="number" step="0.1" placeholder="full cm" />
+          <button id="manualApply" class="btn ghost">Apply</button>
+        </div>
+      </label>
+      <div class="row right">
+        <button class="btn ghost" data-close="calibModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History modal -->
+  <div id="historyModal" class="modal hidden">
+    <div class="modal-card">
+      <h2>History — <span id="historyName"></span></h2>
+      <div id="historyList" class="history-list"></div>
+      <div class="row right">
+        <button id="exportHistory" class="btn ghost">Export JSON</button>
+        <button class="btn ghost" data-close="historyModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bin context menu -->
+  <div id="menuModal" class="modal hidden">
+    <div class="modal-card">
+      <h2 id="menuName"></h2>
+      <button class="btn ghost block" data-menu="calibrate">Calibrate</button>
+      <button class="btn ghost block" data-menu="history">History</button>
+      <button class="btn ghost block" data-menu="rename">Rename</button>
+      <button class="btn ghost block" data-menu="reboot">Reboot ESP32</button>
+      <button class="btn danger block" data-menu="remove">Remove bin</button>
+      <button class="btn ghost block" data-close="menuModal">Cancel</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

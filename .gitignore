@@ -1,0 +1,27 @@
+# PlatformIO
+.pio/
+.vscode/
+platformio.ini.lock
+
+# Compiled firmware
+*.bin
+*.elf
+*.map
+
+# LittleFS image uploads
+firmware/data/*.bin
+
+# Node (in case the user adds tooling later)
+node_modules/
+package-lock.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Local secrets
+.env
+secrets.h
